@@ -79,16 +79,12 @@ def normalize_text(text: str) -> str:
     text = re.sub(r'\b(\d{1,2}):00\s*([ap]\.?m\.?)\b', r'\1 \2', text, flags=re.IGNORECASE)
     text = re.sub(r'\b(\d{1,2}):00\b', r'\1', text)
 
-    # 3. Flowing text: connect isolated single-sentence lines into natural flowing speech
-    # This prevents Kokoro from inserting dead pauses after every short line
-    paragraphs = text.split("\n\n")
-    cleaned_paragraphs = []
-    for p in paragraphs:
-        p_clean = " ".join([line.strip() for line in p.splitlines() if line.strip()])
-        if p_clean:
-            cleaned_paragraphs.append(p_clean)
-    
-    return "\n\n".join(cleaned_paragraphs)
+    # 3. Flowing text: connect all lines into continuous natural speech
+    # Kokoro splits on '\n+' and inserts artificial ~1.5s silences at every chunk boundary.
+    # Joining lines with a space allows Kokoro to speak with natural conversational pacing,
+    # letting punctuation (. , ! ?) determine natural cadence instead of dead pauses.
+    text = " ".join([line.strip() for line in text.splitlines() if line.strip()])
+    return text
 
 
 @app.route("/api/generate", methods=["POST"])
