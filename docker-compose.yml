@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  kokoro-tts:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kokoro-tts
+    restart: unless-stopped
+    ports:
+      - "5050:5050"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HF_HOME=/app/hf_cache
+    volumes:
+      - hf_cache:/app/hf_cache
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+volumes:
+  hf_cache:

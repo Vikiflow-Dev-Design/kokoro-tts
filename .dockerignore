@@ -1,0 +1,13 @@
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.git
+.gitignore
+voice_samples
+narration_full_script
+generated_narrations
+sections
+*.wav
+*.mp3
